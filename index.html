@@ -291,7 +291,7 @@ body.emergency-active{animation:bgFlash .6s infinite}
    ============================================================ */
 var SUPABASE_URL  = 'https://pcrxplddvujuiguxizem.supabase.co';
 var SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBjcnhwbGRkdnVqdWlndXhpemVtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc3ODAzNjMsImV4cCI6MjA5MzM1NjM2M30.XljnC4Qntmr8ZVRm5Dz5f6BLg0m5McsrWNBfCAP6XhY';
-var PHOTO         = '/icons/IMG20260502104340.jpg';
+var PHOTO         = '/icons/salim.jpg';
 
 var PATIENT   = { name: 'Salim', phone: '+91 7010733249' };
 var GUARDIANS = [
@@ -357,7 +357,30 @@ function vibStop() {
 function sirenStart() {
   if (sirenOn) return;
   try {
-    aC = new (window.AudioContext || window.webkitAudioContext)();
+    if (!aC) {
+      aC = new (window.AudioContext || window.webkitAudioContext)();
+    }
+    /* Always resume — required after browser blocks autoplay */
+    var startOsc = function() {
+      if (osc) return;
+      gn = aC.createGain(); gn.gain.value = 0.85; gn.connect(aC.destination);
+      osc = aC.createOscillator(); osc.type = 'sawtooth'; osc.connect(gn); osc.start();
+      osc.frequency.setValueAtTime(560, aC.currentTime);
+      (function sweep() {
+        if (!osc) return;
+        osc.frequency.linearRampToValueAtTime(1120, aC.currentTime + 0.42);
+        osc.frequency.linearRampToValueAtTime(560,  aC.currentTime + 0.85);
+        setTimeout(sweep, 850);
+      })();
+      sirenOn = true;
+      console.log('[Siren] Playing!');
+    };
+    if (aC.state === 'suspended') {
+      aC.resume().then(startOsc);
+    } else {
+      startOsc();
+    }
+    return; /* skip old code below */
     if (aC.state === 'suspended') aC.resume();
     gn = aC.createGain(); gn.gain.value = 0.85; gn.connect(aC.destination);
     osc = aC.createOscillator(); osc.type = 'sawtooth'; osc.connect(gn); osc.start();
@@ -656,7 +679,8 @@ function showGuardian() {
           '<div class="g-list"><div class="g-list-title">GUARDIAN NETWORK (' + GUARDIANS.length + '/10)</div>' +
             GUARDIANS.map(function(g) { return '<div class="g-item"><span class="g-dot"></span>' + g.name + '&nbsp;&middot;&nbsp;' + g.phone + '</div>'; }).join('') +
           '</div>' +
-          '<p class="g-note">Keep this page open.<br>The alarm fires automatically when Salim activates SOS.</p>'
+          '<p class="g-note">Keep this page open.<br>The alarm fires automatically when Salim activates SOS.</p>' +
+          '<button onclick="testAlarm()" style="margin-top:8px;background:rgba(255,28,28,.1);border:1px solid rgba(255,28,28,.4);color:var(--r);font-family:var(--fm);font-size:.65rem;letter-spacing:.1em;padding:9px 20px;border-radius:6px;cursor:pointer;width:100%">&#x1F50A; TAP HERE FIRST — Unlock Sound &amp; Test Alarm</button>'
         ) +
       '</div>';
 
@@ -692,10 +716,54 @@ function showGuardian() {
   });
 }
 
+/* TEST ALARM — guardian taps this to unlock audio AND verify alarm works */
+function testAlarm() {
+  unlockAudio();
+  /* Short test beep to confirm audio works */
+  try {
+    var t = new (window.AudioContext || window.webkitAudioContext)();
+    t.resume().then(function() {
+      var o = t.createOscillator();
+      var g = t.createGain();
+      g.gain.value = 0.6;
+      o.connect(g); g.connect(t.destination);
+      o.frequency.value = 880;
+      o.start();
+      setTimeout(function() { o.stop(); t.close(); }, 600);
+    });
+    vibrateNow();
+    alert('Sound & vibration test done!\nIf you heard a beep, you are READY.\nLeave this page open — alarm will fire automatically when Salim activates SOS.');
+  } catch(e) {
+    alert('Audio test failed: ' + e.message + '\nTry using Chrome browser.');
+  }
+}
+
 /* ERROR */
 function showErr(msg) {
   A.innerHTML = '<div class="err-screen"><div style="font-size:3.5rem">&#x26A0;</div><div style="color:var(--r);font-size:1.1rem;letter-spacing:.12em;font-family:var(--fm)">FAILED TO LOAD</div><div style="color:var(--w3);font-size:.78rem;max-width:320px;line-height:1.8">' + msg + '</div><button class="err-btn" onclick="location.reload()">&#x21BA;&nbsp;RELOAD</button></div>';
 }
+
+/* PRE-UNLOCK AUDIO on first touch — fixes browser autoplay block */
+var audioUnlocked = false;
+function unlockAudio() {
+  if (audioUnlocked) return;
+  try {
+    var tmpCtx = new (window.AudioContext || window.webkitAudioContext)();
+    var buf = tmpCtx.createBuffer(1, 1, 22050);
+    var src = tmpCtx.createBufferSource();
+    src.buffer = buf;
+    src.connect(tmpCtx.destination);
+    src.start(0);
+    tmpCtx.resume().then(function() {
+      tmpCtx.close();
+      audioUnlocked = true;
+      console.log('[Audio] Unlocked successfully');
+    });
+  } catch(e) { console.warn('[Audio unlock]', e); }
+}
+/* Unlock on any touch or click */
+document.addEventListener('touchstart', unlockAudio, { once: true });
+document.addEventListener('click', unlockAudio, { once: true });
 
 /* BOOT */
 var tries = 0;
