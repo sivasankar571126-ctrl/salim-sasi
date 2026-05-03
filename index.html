@@ -13,7 +13,6 @@
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Share+Tech+Mono&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet"/>
 <style>
-
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
   --r:#FF1C1C;--rg:rgba(255,28,28,.45);
@@ -27,16 +26,11 @@
 html,body{width:100%;min-height:100vh;background:var(--bg);color:var(--w);
   font-family:var(--fr);-webkit-font-smoothing:antialiased;
   overscroll-behavior:none;user-select:none}
-
 @keyframes bgFlash{0%,45%{background:#1e0000}46%,100%{background:#080000}}
 @keyframes scanMove{from{top:-4px}to{top:100vh}}
 @keyframes ringOut{0%{opacity:1;transform:scale(.9)}100%{opacity:0;transform:scale(1.6)}}
-@keyframes btnPulse{
-  0%,100%{box-shadow:0 0 0 5px var(--r),0 0 50px var(--rg)}
-  50%{box-shadow:0 0 0 13px rgba(255,28,28,.6),0 0 90px rgba(255,28,28,.8)}}
-@keyframes cardFlash{
-  0%,45%{border-color:var(--r);box-shadow:0 0 60px var(--rg)}
-  46%,100%{border-color:#440000;box-shadow:none}}
+@keyframes btnPulse{0%,100%{box-shadow:0 0 0 5px var(--r),0 0 50px var(--rg)}50%{box-shadow:0 0 0 13px rgba(255,28,28,.6),0 0 90px rgba(255,28,28,.8)}}
+@keyframes cardFlash{0%,45%{border-color:var(--r);box-shadow:0 0 60px var(--rg)}46%,100%{border-color:#440000;box-shadow:none}}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
 @keyframes dotBeat{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.2;transform:scale(.65)}}
 @keyframes gridFloat{from{background-position:0 0}to{background-position:40px 40px}}
@@ -44,71 +38,34 @@ html,body{width:100%;min-height:100vh;background:var(--bg);color:var(--w);
 @keyframes sosPop{0%,55%,100%{opacity:1;text-shadow:0 0 24px currentColor}28%{opacity:.1;text-shadow:none}}
 @keyframes spin{to{transform:rotate(360deg)}}
 @keyframes shimmer{0%{background-position:200% center}100%{background-position:-200% center}}
-@keyframes photoGlow{
-  0%,100%{box-shadow:0 0 0 3px var(--r),0 0 20px rgba(255,28,28,.5)}
-  50%{box-shadow:0 0 0 6px rgba(255,28,28,.8),0 0 40px rgba(255,28,28,.9)}}
-@keyframes emergencyRing{
-  0%{box-shadow:0 0 0 0 rgba(255,28,28,.9)}
-  70%{box-shadow:0 0 0 20px rgba(255,28,28,0)}
-  100%{box-shadow:0 0 0 0 rgba(255,28,28,0)}}
+@keyframes photoGlow{0%,100%{box-shadow:0 0 0 3px var(--r),0 0 20px rgba(255,28,28,.5)}50%{box-shadow:0 0 0 6px rgba(255,28,28,.8),0 0 40px rgba(255,28,28,.9)}}
+@keyframes emergencyRing{0%{box-shadow:0 0 0 0 rgba(255,28,28,.9)}70%{box-shadow:0 0 0 22px rgba(255,28,28,0)}100%{box-shadow:0 0 0 0 rgba(255,28,28,0)}}
 
-#app{display:flex;flex-direction:column;align-items:center;
-  min-height:100vh;padding:0 16px 64px;position:relative;overflow-x:hidden}
-.grid{position:fixed;inset:0;
-  background-image:linear-gradient(rgba(255,0,0,.035) 1px,transparent 1px),
-    linear-gradient(90deg,rgba(255,0,0,.035) 1px,transparent 1px);
-  background-size:40px 40px;animation:gridFloat 22s linear infinite;
-  pointer-events:none;z-index:0}
-.scanline{position:fixed;left:0;width:100%;height:4px;
-  background:linear-gradient(90deg,transparent,rgba(255,28,28,.95),transparent);
-  animation:scanMove 1.8s linear infinite;z-index:300;pointer-events:none}
+#app{display:flex;flex-direction:column;align-items:center;min-height:100vh;padding:0 16px 64px;position:relative;overflow-x:hidden}
+.grid{position:fixed;inset:0;background-image:linear-gradient(rgba(255,0,0,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(255,0,0,.035) 1px,transparent 1px);background-size:40px 40px;animation:gridFloat 22s linear infinite;pointer-events:none;z-index:0}
+.scanline{position:fixed;left:0;width:100%;height:4px;background:linear-gradient(90deg,transparent,rgba(255,28,28,.95),transparent);animation:scanMove 1.8s linear infinite;z-index:300;pointer-events:none}
 body.emergency-active{animation:bgFlash .6s infinite}
-
-#boot-screen{display:flex;flex-direction:column;align-items:center;
-  justify-content:center;height:100vh;gap:18px;
-  font-family:var(--fm);color:var(--r);background:var(--bg)}
+#boot-screen{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;gap:18px;font-family:var(--fm);color:var(--r);background:var(--bg)}
 .boot-spinner{font-size:3.5rem;animation:spin 1s linear infinite}
 .boot-txt{font-size:.82rem;letter-spacing:.28em}
-.boot-bar{width:180px;height:2px;background:rgba(255,28,28,.12);
-  border-radius:2px;overflow:hidden;margin-top:6px}
-.boot-fill{height:100%;width:35%;
-  background:linear-gradient(90deg,transparent,var(--r),transparent);
-  background-size:200% auto;animation:shimmer 1.1s linear infinite;border-radius:2px}
-
-.home{display:flex;flex-direction:column;align-items:center;gap:22px;
-  padding-top:40px;width:100%;max-width:480px;
-  animation:fadeUp .55s ease both;position:relative;z-index:2}
+.boot-bar{width:180px;height:2px;background:rgba(255,28,28,.12);border-radius:2px;overflow:hidden;margin-top:6px}
+.boot-fill{height:100%;width:35%;background:linear-gradient(90deg,transparent,var(--r),transparent);background-size:200% auto;animation:shimmer 1.1s linear infinite;border-radius:2px}
+.home{display:flex;flex-direction:column;align-items:center;gap:22px;padding-top:40px;width:100%;max-width:480px;animation:fadeUp .55s ease both;position:relative;z-index:2}
 .sos-letters{display:flex;gap:1px;line-height:1}
 .sl{font-family:var(--fn);font-size:clamp(4rem,14vw,6.5rem)}
 .sl-s{color:var(--r);animation:sosPop 1.3s 0s infinite}
 .sl-o{color:#FF6B00;animation:sosPop 1.3s .43s infinite}
 .sl-s2{color:var(--r);animation:sosPop 1.3s .86s infinite}
-
 .salim-photo-wrap{position:relative;margin-bottom:4px}
-.salim-photo{width:100px;height:100px;border-radius:50%;
-  object-fit:cover;object-position:center 15%;
-  border:3px solid var(--r);animation:photoGlow 2s ease-in-out infinite;display:block}
-.salim-photo-ring{position:absolute;inset:-6px;border-radius:50%;
-  border:2px solid rgba(255,28,28,.4);
-  animation:emergencyRing 2s ease-out infinite;pointer-events:none}
-
-.home-title{font-family:var(--fn);font-size:clamp(1.8rem,5.5vw,3rem);
-  letter-spacing:.3em;color:var(--w);text-align:center}
-.home-sub{font-family:var(--fm);font-size:.63rem;letter-spacing:.24em;
-  color:var(--r);text-align:center}
-.home-line{width:56px;height:2px;
-  background:linear-gradient(90deg,transparent,var(--r),transparent)}
-.home-desc{font-size:.9rem;color:var(--w3);text-align:center;
-  line-height:1.65;max-width:300px}
-
+.salim-photo{width:100px;height:100px;border-radius:50%;object-fit:cover;object-position:center 15%;border:3px solid var(--r);animation:photoGlow 2s ease-in-out infinite;display:block}
+.salim-photo-ring{position:absolute;inset:-6px;border-radius:50%;border:2px solid rgba(255,28,28,.4);animation:emergencyRing 2s ease-out infinite;pointer-events:none}
+.home-title{font-family:var(--fn);font-size:clamp(1.8rem,5.5vw,3rem);letter-spacing:.3em;color:var(--w);text-align:center}
+.home-sub{font-family:var(--fm);font-size:.63rem;letter-spacing:.24em;color:var(--r);text-align:center}
+.home-line{width:56px;height:2px;background:linear-gradient(90deg,transparent,var(--r),transparent)}
+.home-desc{font-size:.9rem;color:var(--w3);text-align:center;line-height:1.65;max-width:300px}
 .role-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;width:100%}
 @media(max-width:360px){.role-grid{grid-template-columns:1fr}}
-.rcard{padding:22px 16px;border-radius:12px;
-  background:linear-gradient(145deg,var(--bg2),var(--bg3));
-  border:1px solid rgba(255,255,255,.07);cursor:pointer;
-  text-align:left;transition:transform .2s,box-shadow .2s;
-  display:flex;flex-direction:column;gap:6px;
-  position:relative;overflow:hidden}
+.rcard{padding:22px 16px;border-radius:12px;background:linear-gradient(145deg,var(--bg2),var(--bg3));border:1px solid rgba(255,255,255,.07);cursor:pointer;text-align:left;transition:transform .2s,box-shadow .2s;display:flex;flex-direction:column;gap:6px;position:relative;overflow:hidden}
 .rcard:hover{transform:translateY(-4px)}.rcard:active{transform:scale(.97)}
 .rcard.red:hover{box-shadow:0 0 40px rgba(255,28,28,.3);border-color:rgba(255,28,28,.5)}
 .rcard.blue:hover{box-shadow:0 0 30px rgba(79,195,247,.25);border-color:rgba(79,195,247,.5)}
@@ -120,155 +77,80 @@ body.emergency-active{animation:bgFlash .6s infinite}
 .rc-phone{font-family:var(--fm);font-size:.59rem;color:rgba(255,255,255,.2)}
 .rc-go{font-family:var(--fm);font-size:.6rem;letter-spacing:.14em;margin-top:8px}
 .rcard.red .rc-go{color:var(--r)}.rcard.blue .rc-go{color:var(--b)}
-.sys-row{display:flex;align-items:center;gap:8px;font-family:var(--fm);
-  font-size:.55rem;letter-spacing:.12em;color:rgba(255,255,255,.2)}
-
+.sys-row{display:flex;align-items:center;gap:8px;font-family:var(--fm);font-size:.55rem;letter-spacing:.12em;color:rgba(255,255,255,.2)}
 .dot{width:9px;height:9px;border-radius:50%;display:inline-block;flex-shrink:0}
 .dot-green{background:var(--g);box-shadow:0 0 8px var(--g);animation:dotBeat 2.2s infinite}
 .dot-yellow{background:var(--o);animation:dotBeat .75s infinite}
-.dot-red{background:var(--r);box-shadow:0 0 8px var(--r);animation:dotBeat .4s infinite}
-
-.back-btn{align-self:flex-start;background:rgba(255,255,255,.05);
-  border:1px solid rgba(255,255,255,.13);color:var(--w3);
-  font-family:var(--fm);font-size:.6rem;letter-spacing:.12em;
-  padding:7px 15px;border-radius:6px;cursor:pointer;transition:all .2s}
+.back-btn{align-self:flex-start;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.13);color:var(--w3);font-family:var(--fm);font-size:.6rem;letter-spacing:.12em;padding:7px 15px;border-radius:6px;cursor:pointer;transition:all .2s}
 .back-btn:hover{color:var(--w);background:rgba(255,255,255,.09)}
-
-.gps-row{display:flex;align-items:center;gap:8px;font-family:var(--fm);
-  font-size:.68rem;color:var(--w3);align-self:flex-start;
-  background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);
-  border-radius:6px;padding:5px 12px}
-.info-card{width:100%;background:rgba(0,0,0,.4);
-  border:1px solid rgba(255,50,50,.22);border-radius:10px;padding:13px 17px}
+.gps-row{display:flex;align-items:center;gap:8px;font-family:var(--fm);font-size:.68rem;color:var(--w3);align-self:flex-start;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:6px;padding:5px 12px}
+.info-card{width:100%;background:rgba(0,0,0,.4);border:1px solid rgba(255,50,50,.22);border-radius:10px;padding:13px 17px}
 .info-row{display:flex;justify-content:space-between;align-items:center;padding:4px 0}
 .info-lbl{font-family:var(--fm);font-size:.55rem;letter-spacing:.2em;color:rgba(255,255,255,.25)}
 .info-val{font-family:var(--fm);font-size:.84rem;color:#FF8899}
-
-.sender-badge{display:flex;align-items:center;gap:14px;
-  background:linear-gradient(135deg,rgba(255,28,28,.09),rgba(100,0,0,.05));
-  border:1px solid rgba(255,28,28,.25);border-radius:12px;
-  padding:12px 20px;width:100%}
-.sender-badge-photo{width:52px;height:52px;border-radius:50%;
-  object-fit:cover;object-position:center 15%;border:2px solid var(--r);
-  box-shadow:0 0 12px rgba(255,28,28,.4);flex-shrink:0}
+.sender-badge{display:flex;align-items:center;gap:14px;background:linear-gradient(135deg,rgba(255,28,28,.09),rgba(100,0,0,.05));border:1px solid rgba(255,28,28,.25);border-radius:12px;padding:12px 20px;width:100%}
+.sender-badge-photo{width:52px;height:52px;border-radius:50%;object-fit:cover;object-position:center 15%;border:2px solid var(--r);box-shadow:0 0 12px rgba(255,28,28,.4);flex-shrink:0}
 .sender-badge-name{font-family:var(--fn);font-size:1.45rem;letter-spacing:.09em;color:var(--r)}
 .sender-badge-phone{font-family:var(--fm);font-size:.65rem;color:var(--w3)}
-.sender-badge-status{font-family:var(--fm);font-size:.55rem;letter-spacing:.12em;
-  color:var(--g);margin-top:2px}
-
-.sender{display:flex;flex-direction:column;align-items:center;gap:16px;
-  padding-top:18px;width:100%;max-width:420px;
-  position:relative;z-index:2;animation:fadeUp .5s ease both}
+.sender-badge-status{font-family:var(--fm);font-size:.55rem;letter-spacing:.12em;color:var(--g);margin-top:2px}
+.sender{display:flex;flex-direction:column;align-items:center;gap:16px;padding-top:18px;width:100%;max-width:420px;position:relative;z-index:2;animation:fadeUp .5s ease both}
 .sos-wrap{display:flex;align-items:center;justify-content:center;padding:24px 0 10px}
-.sos-btn{position:relative;width:clamp(210px,58vw,275px);height:clamp(210px,58vw,275px);
-  border-radius:50%;border:none;
-  background:radial-gradient(circle at 40% 38%,#E00000 0%,#880000 50%,#3A0000 100%);
-  cursor:pointer;display:flex;align-items:center;justify-content:center;
-  animation:btnPulse 2.2s ease-in-out infinite;transition:transform .15s;
-  -webkit-tap-highlight-color:transparent}
-.sos-btn:hover{transform:scale(1.05)}
-.sos-btn:active{transform:scale(.92);animation:none}
+.sos-btn{position:relative;width:clamp(210px,58vw,275px);height:clamp(210px,58vw,275px);border-radius:50%;border:none;background:radial-gradient(circle at 40% 38%,#E00000 0%,#880000 50%,#3A0000 100%);cursor:pointer;display:flex;align-items:center;justify-content:center;animation:btnPulse 2.2s ease-in-out infinite;transition:transform .15s;-webkit-tap-highlight-color:transparent}
+.sos-btn:hover{transform:scale(1.05)}.sos-btn:active{transform:scale(.92);animation:none}
 .sos-btn:disabled{opacity:.4;cursor:not-allowed;animation:none}
-.ring,.ring2,.ring3{position:absolute;border-radius:50%;
-  border:2px solid rgba(255,28,28,.5);animation:ringOut 2.4s ease-out infinite;pointer-events:none}
-.ring{inset:-16px}.ring2{inset:-32px;border-color:rgba(255,28,28,.22);animation-delay:1.2s}
-.ring3{inset:-50px;border-color:rgba(255,28,28,.1);animation-delay:2.4s}
+.ring,.ring2,.ring3{position:absolute;border-radius:50%;border:2px solid rgba(255,28,28,.5);animation:ringOut 2.4s ease-out infinite;pointer-events:none}
+.ring{inset:-16px}.ring2{inset:-32px;border-color:rgba(255,28,28,.22);animation-delay:1.2s}.ring3{inset:-50px;border-color:rgba(255,28,28,.1);animation-delay:2.4s}
 .btn-core{display:flex;flex-direction:column;align-items:center;gap:5px;pointer-events:none}
-.btn-photo{width:80px;height:80px;border-radius:50%;object-fit:cover;
-  object-position:center 15%;border:3px solid rgba(255,255,255,.8);
-  box-shadow:0 0 0 3px rgba(255,28,28,.5);margin-bottom:4px}
+.btn-photo{width:80px;height:80px;border-radius:50%;object-fit:cover;object-position:center 15%;border:3px solid rgba(255,255,255,.8);box-shadow:0 0 0 3px rgba(255,28,28,.5);margin-bottom:4px}
 .btn-lbl{font-family:var(--fn);font-size:1.5rem;letter-spacing:.12em;color:#fff;line-height:1}
 .btn-sub{font-family:var(--fm);font-size:.55rem;letter-spacing:.2em;color:rgba(255,255,255,.65)}
-
-.live-box{width:100%;
-  background:linear-gradient(135deg,rgba(255,28,28,.13),rgba(100,0,0,.08));
-  border:2px solid var(--r);border-radius:12px;
-  padding:20px 24px;text-align:center;animation:cardFlash .65s infinite}
+.live-box{width:100%;background:linear-gradient(135deg,rgba(255,28,28,.13),rgba(100,0,0,.08));border:2px solid var(--r);border-radius:12px;padding:20px 24px;text-align:center;animation:cardFlash .65s infinite}
 .live-title{font-family:var(--fn);font-size:1.65rem;letter-spacing:.1em;color:var(--r)}
 .live-timer{font-family:var(--fm);font-size:3.2rem;color:var(--w);letter-spacing:.08em;margin:6px 0}
 .live-line{font-family:var(--fm);font-size:.68rem;color:var(--w3);margin-top:4px;letter-spacing:.04em}
-.resolve-btn{background:rgba(0,255,135,.07);border:1px solid rgba(0,255,135,.45);
-  color:var(--g);font-family:var(--fm);font-size:.7rem;letter-spacing:.12em;
-  padding:12px 24px;border-radius:8px;cursor:pointer;transition:all .2s;
-  width:100%;display:flex;align-items:center;justify-content:center;gap:8px}
+.resolve-btn{background:rgba(0,255,135,.07);border:1px solid rgba(0,255,135,.45);color:var(--g);font-family:var(--fm);font-size:.7rem;letter-spacing:.12em;padding:12px 24px;border-radius:8px;cursor:pointer;transition:all .2s;width:100%;display:flex;align-items:center;justify-content:center;gap:8px}
 .resolve-btn:hover{background:rgba(0,255,135,.13)}
 .sender-note{font-size:.82rem;color:var(--w3);text-align:center;line-height:1.6;max-width:270px}
-
-.guardian{display:flex;flex-direction:column;align-items:center;gap:14px;
-  padding-top:18px;width:100%;max-width:460px;
-  position:relative;z-index:2;animation:fadeUp .5s ease both}
-.g-icon{font-size:3.2rem;margin-top:10px;
-  filter:drop-shadow(0 0 12px rgba(79,195,247,.4))}
+.guardian{display:flex;flex-direction:column;align-items:center;gap:14px;padding-top:18px;width:100%;max-width:460px;position:relative;z-index:2;animation:fadeUp .5s ease both}
+.g-icon{font-size:3.2rem;margin-top:10px;filter:drop-shadow(0 0 12px rgba(79,195,247,.4))}
 .g-title{font-family:var(--fn);font-size:2.2rem;letter-spacing:.15em;color:var(--b)}
 .g-sub{font-family:var(--fm);font-size:.72rem;color:var(--w3);text-align:center}
-.pill{display:flex;align-items:center;gap:9px;
-  background:rgba(0,255,135,.07);border:1px solid rgba(0,255,135,.28);
-  border-radius:99px;padding:7px 22px;
-  font-family:var(--fm);font-size:.66rem;color:var(--g);letter-spacing:.06em}
-.g-list{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);
-  border-radius:10px;padding:14px 18px;width:100%}
-.g-list-title{font-family:var(--fm);font-size:.53rem;letter-spacing:.22em;
-  color:rgba(255,255,255,.2);margin-bottom:10px}
-.g-item{display:flex;align-items:center;gap:10px;font-size:.87rem;color:var(--w3);
-  padding:5px 0;border-bottom:1px solid rgba(255,255,255,.04)}
+.pill{display:flex;align-items:center;gap:9px;background:rgba(0,255,135,.07);border:1px solid rgba(0,255,135,.28);border-radius:99px;padding:7px 22px;font-family:var(--fm);font-size:.66rem;color:var(--g);letter-spacing:.06em}
+.notif-box{width:100%;border-radius:10px;padding:14px 18px;display:flex;align-items:center;gap:12px;font-family:var(--fm);font-size:.7rem;letter-spacing:.06em}
+.notif-granted{background:rgba(0,255,135,.07);border:1px solid rgba(0,255,135,.3);color:var(--g)}
+.notif-pending{background:rgba(255,184,0,.07);border:1px solid rgba(255,184,0,.3);color:var(--o)}
+.notif-denied{background:rgba(255,28,28,.07);border:1px solid rgba(255,28,28,.3);color:var(--r)}
+.notif-icon{font-size:1.4rem;flex-shrink:0}
+.enable-notif-btn{width:100%;padding:13px;border-radius:10px;border:2px solid var(--o);background:rgba(255,184,0,.08);color:var(--o);font-family:var(--fn);font-size:1.1rem;letter-spacing:.09em;cursor:pointer;transition:all .2s}
+.enable-notif-btn:hover{background:rgba(255,184,0,.15);transform:translateY(-2px)}
+.g-list{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:10px;padding:14px 18px;width:100%}
+.g-list-title{font-family:var(--fm);font-size:.53rem;letter-spacing:.22em;color:rgba(255,255,255,.2);margin-bottom:10px}
+.g-item{display:flex;align-items:center;gap:10px;font-size:.87rem;color:var(--w3);padding:5px 0;border-bottom:1px solid rgba(255,255,255,.04)}
 .g-item:last-child{border-bottom:none}
 .g-dot{width:6px;height:6px;border-radius:50%;background:var(--b);flex-shrink:0}
-.g-note{font-size:.8rem;color:rgba(255,255,255,.2);text-align:center;
-  line-height:1.6;max-width:280px}
-
-.emg-bar{width:calc(100% + 32px);margin:0 -16px;
-  display:flex;align-items:center;justify-content:space-between;
-  padding:13px 22px;
-  background:linear-gradient(90deg,rgba(255,28,28,.32),rgba(150,0,0,.2));
-  border-bottom:2px solid var(--r)}
-.emg-lbl{font-family:var(--fn);font-size:1.25rem;letter-spacing:.1em;
-  color:var(--r);animation:blink .48s infinite}
+.g-note{font-size:.8rem;color:rgba(255,255,255,.2);text-align:center;line-height:1.6;max-width:280px}
+.emg-bar{width:calc(100% + 32px);margin:0 -16px;display:flex;align-items:center;justify-content:space-between;padding:13px 22px;background:linear-gradient(90deg,rgba(255,28,28,.32),rgba(150,0,0,.2));border-bottom:2px solid var(--r)}
+.emg-lbl{font-family:var(--fn);font-size:1.25rem;letter-spacing:.1em;color:var(--r);animation:blink .48s infinite}
 .emg-clock{font-family:var(--fm);font-size:1.15rem;color:var(--w)}
-
-.alert-box{width:100%;
-  background:linear-gradient(135deg,rgba(255,28,28,.14),rgba(100,0,0,.08));
-  border:2px solid var(--r);border-radius:12px;
-  padding:22px;text-align:center;animation:cardFlash .65s infinite;
-  display:flex;flex-direction:column;align-items:center;gap:10px}
-.alert-photo{width:80px;height:80px;border-radius:50%;
-  object-fit:cover;object-position:center 15%;border:3px solid var(--r);
-  box-shadow:0 0 0 4px rgba(255,28,28,.3),0 0 30px rgba(255,28,28,.6);
-  animation:photoGlow 1s ease-in-out infinite}
-.alert-name{font-family:var(--fn);font-size:2.8rem;letter-spacing:.15em;
-  color:var(--r);line-height:1}
+.alert-box{width:100%;background:linear-gradient(135deg,rgba(255,28,28,.14),rgba(100,0,0,.08));border:2px solid var(--r);border-radius:12px;padding:22px;text-align:center;animation:cardFlash .65s infinite;display:flex;flex-direction:column;align-items:center;gap:10px}
+.alert-photo{width:80px;height:80px;border-radius:50%;object-fit:cover;object-position:center 15%;border:3px solid var(--r);box-shadow:0 0 0 4px rgba(255,28,28,.3),0 0 30px rgba(255,28,28,.6);animation:photoGlow 1s ease-in-out infinite}
+.alert-name{font-family:var(--fn);font-size:2.8rem;letter-spacing:.15em;color:var(--r);line-height:1}
 .alert-phone-txt{font-family:var(--fm);font-size:.76rem;color:var(--w3)}
-.alert-urgent{font-family:var(--fn);font-size:1.45rem;letter-spacing:.1em;
-  color:var(--w);animation:blink .42s infinite}
-
+.alert-urgent{font-family:var(--fn);font-size:1.45rem;letter-spacing:.1em;color:var(--w);animation:blink .42s infinite}
 .act-grid{display:flex;flex-direction:column;gap:10px;width:100%}
-.act{display:block;text-align:center;text-decoration:none;padding:14px;
-  border-radius:10px;font-family:var(--fn);font-size:1.1rem;letter-spacing:.09em;
-  cursor:pointer;border:2px solid;transition:all .2s;width:100%}
+.act{display:block;text-align:center;text-decoration:none;padding:14px;border-radius:10px;font-family:var(--fn);font-size:1.1rem;letter-spacing:.09em;cursor:pointer;border:2px solid;transition:all .2s;width:100%}
 .act-mute{border-color:rgba(255,255,255,.3);background:rgba(255,255,255,.08);color:var(--w)}
 .act-mute:hover{background:rgba(255,255,255,.15);transform:translateY(-2px)}
 .act-unmute{border-color:rgba(255,165,0,.5);background:rgba(255,165,0,.09);color:#FFA500}
 .act-call{border-color:rgba(0,255,135,.45);background:rgba(0,255,135,.07);color:var(--g)}
 .act-call:hover{background:rgba(0,255,135,.14);transform:translateY(-2px)}
-.muted-tag{width:100%;text-align:center;background:rgba(255,165,0,.07);
-  border:1px solid rgba(255,165,0,.3);border-radius:7px;padding:8px;
-  font-family:var(--fm);font-size:.6rem;color:#FFA500;letter-spacing:.07em}
-.ts-note{font-family:var(--fm);font-size:.58rem;letter-spacing:.08em;
-  color:rgba(255,255,255,.15);text-align:center}
-#map{width:100%;height:260px;border-radius:10px;
-  border:1px solid rgba(255,50,50,.3);overflow:hidden;z-index:1;
-  box-shadow:0 4px 24px rgba(0,0,0,.4)}
-.dist-row{font-family:var(--fm);font-size:.7rem;color:var(--b);letter-spacing:.07em;
-  text-align:center;background:rgba(79,195,247,.06);
-  border:1px solid rgba(79,195,247,.2);border-radius:6px;padding:6px 14px}
-
-.err-screen{display:flex;flex-direction:column;align-items:center;
-  justify-content:center;min-height:100vh;gap:18px;padding:28px;
-  text-align:center;font-family:var(--fm);background:var(--bg)}
-.err-btn{background:transparent;border:1px solid rgba(255,255,255,.22);
-  color:var(--w3);font-family:var(--fm);font-size:.72rem;letter-spacing:.12em;
-  padding:11px 28px;border-radius:7px;cursor:pointer;margin-top:6px;transition:all .2s}
+.muted-tag{width:100%;text-align:center;background:rgba(255,165,0,.07);border:1px solid rgba(255,165,0,.3);border-radius:7px;padding:8px;font-family:var(--fm);font-size:.6rem;color:#FFA500;letter-spacing:.07em}
+.ts-note{font-family:var(--fm);font-size:.58rem;letter-spacing:.08em;color:rgba(255,255,255,.15);text-align:center}
+#map{width:100%;height:260px;border-radius:10px;border:1px solid rgba(255,50,50,.3);overflow:hidden;z-index:1;box-shadow:0 4px 24px rgba(0,0,0,.4)}
+.dist-row{font-family:var(--fm);font-size:.7rem;color:var(--b);letter-spacing:.07em;text-align:center;background:rgba(79,195,247,.06);border:1px solid rgba(79,195,247,.2);border-radius:6px;padding:6px 14px}
+.err-screen{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;gap:18px;padding:28px;text-align:center;font-family:var(--fm);background:var(--bg)}
+.err-btn{background:transparent;border:1px solid rgba(255,255,255,.22);color:var(--w3);font-family:var(--fm);font-size:.72rem;letter-spacing:.12em;padding:11px 28px;border-radius:7px;cursor:pointer;margin-top:6px;transition:all .2s}
 .err-btn:hover{background:rgba(255,255,255,.07);color:var(--w)}
-
 </style>
 </head>
 <body>
@@ -279,21 +161,22 @@ body.emergency-active{animation:bgFlash .6s infinite}
     <div class="boot-bar"><div class="boot-fill"></div></div>
   </div>
 </div>
-
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <script>
-
 'use strict';
 
 /* ============================================================
-   CONFIG — paste your Supabase anon key below
+   CONFIG — PASTE YOUR KEYS HERE
    ============================================================ */
-var SUPABASE_URL  = 'https://pcrxplddvujuiguxizem.supabase.co';
-var SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBjcnhwbGRkdnVqdWlndXhpemVtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc3ODAzNjMsImV4cCI6MjA5MzM1NjM2M30.XljnC4Qntmr8ZVRm5Dz5f6BLg0m5McsrWNBfCAP6XhY';
-var PHOTO         = '/icons/salim.jpg';
+var SUPABASE_URL   = 'https://pcrxplddvujuiguxizem.supabase.co';
+var SUPABASE_ANON  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBjcnhwbGRkdnVqdWlndXhpemVtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc3ODAzNjMsImV4cCI6MjA5MzM1NjM2M30.XljnC4Qntmr8ZVRm5Dz5f6BLg0m5McsrWNBfCAP6XhY';
+var VAPID_PUBLIC   = 'BLL92Kgj6oZfeNf7LT1-Z-VRs7-4YZI1wK2d1BwAq9QBh-gW91GlJ0xsM1UvzX1A_QNE5yw5uenf1F75iDJL16A';
+var EDGE_FUNC_URL  = 'https://pcrxplddvujuiguxizem.supabase.co/functions/v1/send-push';
+var PHOTO          = '/icons/salim.jpg';
+var APP_URL        = 'https://salim-sos-emer.vercel.app';
 
-var PATIENT   = { name: 'Salim', phone: '+91 7010733249' };
+var PATIENT = { name: 'Salim', phone: '+91 7010733249' };
 var GUARDIANS = [
   { name: 'Guardian 1',  phone: '+91 9787400163' },
   { name: 'Guardian 2',  phone: '+91 9344007335' },
@@ -308,98 +191,75 @@ var GUARDIANS = [
 ];
 
 /* STATE */
-var sb = null, rtCh = null, eData = null;
+var sb = null, rtCh = null, swReg = null, eData = null;
 var sirenOn = false, muted = false, elapsed = 0, tick = null;
 var gpsW = null, myPos = null;
 var lMap = null, mrkS = null, mrkM = null, mrkL = null;
-var aC = null, osc = null, gn = null, alertAt = null;
-var vibInt = null;
+var aC = null, osc = null, gn = null, alertAt = null, vibInt = null;
 var A = document.getElementById('app');
 
 /* UTILS */
 function eid(i) { return document.getElementById(i); }
-function hms(s) {
-  return String(Math.floor(s / 60)).padStart(2, '0') + ':' + String(s % 60).padStart(2, '0');
+function hms(s) { return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0'); }
+function safeN(v,d) { return Number(v||0).toFixed(d); }
+function haversine(la1,lo1,la2,lo2) {
+  var R=6371000, r1=la1*Math.PI/180, r2=la2*Math.PI/180;
+  var dr=(la2-la1)*Math.PI/180, dc=(lo2-lo1)*Math.PI/180;
+  var a=Math.sin(dr/2)*Math.sin(dr/2)+Math.cos(r1)*Math.cos(r2)*Math.sin(dc/2)*Math.sin(dc/2);
+  return R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
 }
-function safeN(v, d) { return Number(v || 0).toFixed(d); }
-function haversine(la1, lo1, la2, lo2) {
-  var R = 6371000;
-  var r1 = la1 * Math.PI / 180, r2 = la2 * Math.PI / 180;
-  var dr = (la2 - la1) * Math.PI / 180, dc = (lo2 - lo1) * Math.PI / 180;
-  var a = Math.sin(dr / 2) * Math.sin(dr / 2) +
-          Math.cos(r1) * Math.cos(r2) * Math.sin(dc / 2) * Math.sin(dc / 2);
-  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-}
-function fmtD(m) {
-  if (!m || isNaN(m)) return '\u2014';
-  return m < 1000 ? Math.round(m) + ' m' : (m / 1000).toFixed(2) + ' km';
-}
+function fmtD(m) { return !m||isNaN(m)?'\u2014':m<1000?Math.round(m)+' m':(m/1000).toFixed(2)+' km'; }
 function pimg(cls) {
-  return '<img class="' + cls + '" src="' + PHOTO +
-         '" alt="Salim" onerror="this.style.display=\'none\'">';
+  return '<img class="'+cls+'" src="'+PHOTO+'" alt="Salim" onerror="this.style.display=\'none\'">';
 }
 
 /* VIBRATION — emergency call pattern */
 function vibrateNow() {
   if (!('vibrate' in navigator)) return;
-  navigator.vibrate([800,150,800,150,800,400,200,100,200,100,200,400,800,150,800,150,800]);
+  navigator.vibrate([800,150,800,150,800,400,200,100,200,100,200,400,800,200,800,200,800]);
 }
-function vibStart() {
-  vibrateNow();
-  vibInt = setInterval(function() { if (sirenOn && !muted) vibrateNow(); }, 5000);
+function vibStart() { vibrateNow(); vibInt = setInterval(function() { if (!muted) vibrateNow(); }, 5000); }
+function vibStop() { if (vibInt) { clearInterval(vibInt); vibInt=null; } if ('vibrate' in navigator) navigator.vibrate(0); }
+
+/* AUDIO UNLOCK — must happen on user gesture */
+var audioUnlocked = false;
+function unlockAudio() {
+  if (audioUnlocked) return;
+  try {
+    var tmp = new (window.AudioContext||window.webkitAudioContext)();
+    tmp.resume().then(function() { tmp.close(); audioUnlocked = true; });
+  } catch(e) {}
 }
-function vibStop() {
-  if (vibInt) { clearInterval(vibInt); vibInt = null; }
-  if ('vibrate' in navigator) navigator.vibrate(0);
-}
+document.addEventListener('touchstart', unlockAudio, { once: true });
+document.addEventListener('click', unlockAudio, { once: true });
 
 /* SIREN */
 function sirenStart() {
   if (sirenOn) return;
   try {
-    if (!aC) {
-      aC = new (window.AudioContext || window.webkitAudioContext)();
-    }
-    /* Always resume — required after browser blocks autoplay */
-    var startOsc = function() {
+    if (!aC) aC = new (window.AudioContext||window.webkitAudioContext)();
+    var doPlay = function() {
       if (osc) return;
       gn = aC.createGain(); gn.gain.value = 0.85; gn.connect(aC.destination);
       osc = aC.createOscillator(); osc.type = 'sawtooth'; osc.connect(gn); osc.start();
       osc.frequency.setValueAtTime(560, aC.currentTime);
       (function sweep() {
         if (!osc) return;
-        osc.frequency.linearRampToValueAtTime(1120, aC.currentTime + 0.42);
-        osc.frequency.linearRampToValueAtTime(560,  aC.currentTime + 0.85);
+        osc.frequency.linearRampToValueAtTime(1120, aC.currentTime+0.42);
+        osc.frequency.linearRampToValueAtTime(560,  aC.currentTime+0.85);
         setTimeout(sweep, 850);
       })();
       sirenOn = true;
-      console.log('[Siren] Playing!');
     };
-    if (aC.state === 'suspended') {
-      aC.resume().then(startOsc);
-    } else {
-      startOsc();
-    }
-    return; /* skip old code below */
-    if (aC.state === 'suspended') aC.resume();
-    gn = aC.createGain(); gn.gain.value = 0.85; gn.connect(aC.destination);
-    osc = aC.createOscillator(); osc.type = 'sawtooth'; osc.connect(gn); osc.start();
-    osc.frequency.setValueAtTime(560, aC.currentTime);
-    (function sweep() {
-      if (!osc) return;
-      osc.frequency.linearRampToValueAtTime(1120, aC.currentTime + 0.42);
-      osc.frequency.linearRampToValueAtTime(560,  aC.currentTime + 0.85);
-      setTimeout(sweep, 850);
-    })();
-    sirenOn = true;
-  } catch (e) { console.error('[Siren]', e); }
+    if (aC.state === 'suspended') aC.resume().then(doPlay); else doPlay();
+  } catch(e) { console.error('[Siren]', e); }
 }
 function sirenStop() {
   try {
     if (osc) { osc.stop(); osc = null; }
     if (gn)  { gn.disconnect(); gn = null; }
     if (aC)  { aC.close(); aC = null; }
-  } catch (_) {}
+  } catch(_) {}
   sirenOn = false;
 }
 
@@ -410,39 +270,79 @@ function mapInit(lat, lng) {
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19 }).addTo(lMap);
   L.control.attribution({ prefix: '\u00a9 OpenStreetMap' }).addTo(lMap);
 }
-function icoR() {
-  return L.divIcon({
-    html: '<div style="width:24px;height:24px;border-radius:50%;background:#FF1C1C;border:3px solid #fff;box-shadow:0 0 18px rgba(255,28,28,.9)"></div>',
-    iconSize: [24, 24], iconAnchor: [12, 12], className: ''
-  });
-}
-function icoB() {
-  return L.divIcon({
-    html: '<div style="width:18px;height:18px;border-radius:50%;background:#4FC3F7;border:3px solid #fff;box-shadow:0 0 12px rgba(79,195,247,.9)"></div>',
-    iconSize: [18, 18], iconAnchor: [9, 9], className: ''
-  });
-}
+function icoR() { return L.divIcon({ html: '<div style="width:24px;height:24px;border-radius:50%;background:#FF1C1C;border:3px solid #fff;box-shadow:0 0 18px rgba(255,28,28,.9)"></div>', iconSize:[24,24], iconAnchor:[12,12], className:'' }); }
+function icoB() { return L.divIcon({ html: '<div style="width:18px;height:18px;border-radius:50%;background:#4FC3F7;border:3px solid #fff;box-shadow:0 0 12px rgba(79,195,247,.9)"></div>', iconSize:[18,18], iconAnchor:[9,9], className:'' }); }
 function mapRefresh(sLat, sLng, mLat, mLng) {
   if (!window.L || !lMap) return;
   try {
-    if (!mrkS) mrkS = L.marker([sLat, sLng], { icon: icoR() }).addTo(lMap)
-      .bindPopup('<b style="color:#FF1C1C">&#x1F198; SALIM &mdash; SOS</b>');
+    if (!mrkS) mrkS = L.marker([sLat,sLng], { icon: icoR() }).addTo(lMap).bindPopup('<b style="color:#FF1C1C">&#x1F198; SALIM</b>');
     else mrkS.setLatLng([sLat, sLng]);
     if (mLat && mLng) {
-      if (!mrkM) mrkM = L.marker([mLat, mLng], { icon: icoB() }).addTo(lMap)
-        .bindPopup('<b style="color:#4FC3F7">&#x1F4CD; You</b>');
+      if (!mrkM) mrkM = L.marker([mLat,mLng], { icon: icoB() }).addTo(lMap).bindPopup('<b style="color:#4FC3F7">You</b>');
       else mrkM.setLatLng([mLat, mLng]);
       if (mrkL) lMap.removeLayer(mrkL);
-      mrkL = L.polyline([[sLat, sLng], [mLat, mLng]], {
-        color: '#FF3333', weight: 4, opacity: .88, dashArray: '11 7'
-      }).addTo(lMap);
-      lMap.fitBounds([[sLat, sLng], [mLat, mLng]], { padding: [48, 48] });
+      mrkL = L.polyline([[sLat,sLng],[mLat,mLng]], { color:'#FF3333', weight:4, dashArray:'11 7' }).addTo(lMap);
+      lMap.fitBounds([[sLat,sLng],[mLat,mLng]], { padding:[48,48] });
       var d = haversine(sLat, sLng, mLat, mLng);
-      var dr = eid('dist-row');
-      if (dr) dr.textContent = '\uD83D\uDCCF Distance: ' + fmtD(d);
-    } else { lMap.setView([sLat, sLng], 15); }
+      var dr = eid('dist-row'); if (dr) dr.textContent = '\uD83D\uDCCF Distance: ' + fmtD(d);
+    } else { lMap.setView([sLat,sLng], 15); }
     lMap.invalidateSize();
-  } catch (e) { console.error('[Map]', e); }
+  } catch(e) { console.error('[Map]', e); }
+}
+
+/* ============================================================
+   PUSH NOTIFICATIONS — works even when phone is locked
+   ============================================================ */
+function urlBase64ToUint8Array(base64String) {
+  var padding = '='.repeat((4 - base64String.length % 4) % 4);
+  var base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
+  var rawData = window.atob(base64);
+  var outputArray = new Uint8Array(rawData.length);
+  for (var i = 0; i < rawData.length; ++i) outputArray[i] = rawData.charCodeAt(i);
+  return outputArray;
+}
+
+function getNotifStatus() {
+  if (!('Notification' in window)) return 'unsupported';
+  return Notification.permission;
+}
+
+function subscribeGuardian(cb) {
+  if (!swReg) { if (cb) cb(false, 'SW not registered'); return; }
+  if (!('PushManager' in window)) { if (cb) cb(false, 'Push not supported'); return; }
+
+  Notification.requestPermission().then(function(perm) {
+    if (perm !== 'granted') { if (cb) cb(false, 'Permission denied'); return; }
+
+    swReg.pushManager.subscribe({
+      userVisibleOnly: true,
+      applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC)
+    }).then(function(sub) {
+      var subJson = sub.toJSON();
+      sb.from('push_subscriptions').upsert({
+        endpoint: subJson.endpoint,
+        p256dh:   subJson.keys.p256dh,
+        auth:     subJson.keys.auth,
+        device:   'Guardian'
+      }, { onConflict: 'endpoint' }).then(function(r) {
+        if (r.error) { console.error('[Push sub]', r.error); if (cb) cb(false, r.error.message); }
+        else { console.log('[Push] Subscribed!'); if (cb) cb(true, null); }
+      });
+    }).catch(function(e) { console.error('[Push subscribe]', e); if (cb) cb(false, e.message); });
+  });
+}
+
+function sendPushToAll(emergencyData) {
+  fetch(EDGE_FUNC_URL, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' + SUPABASE_ANON
+    },
+    body: JSON.stringify({ emergency: emergencyData })
+  }).then(function(r) { return r.json(); })
+    .then(function(d) { console.log('[Push sent]', d); })
+    .catch(function(e) { console.error('[Push failed]', e); });
 }
 
 /* DB HELPERS */
@@ -465,20 +365,12 @@ function dbGet(cb) {
 /* REALTIME */
 function rtStart(fn) {
   rtStop();
-  rtCh = sb.channel('salim-sos-final')
-    .on('postgres_changes', {
-      event: '*', schema: 'public',
-      table: 'emergency_state', filter: 'id=eq.1'
-    }, function(p) {
-      console.log('[RT]', p.new.status);
-      eData = p.new;
-      fn(p.new);
-    })
-    .subscribe(function(s) { console.log('[RT channel]', s); });
+  rtCh = sb.channel('salim-sos-final-v2')
+    .on('postgres_changes', { event: '*', schema: 'public', table: 'emergency_state', filter: 'id=eq.1' },
+      function(p) { console.log('[RT]', p.new.status); eData = p.new; fn(p.new); })
+    .subscribe(function(s) { console.log('[RT]', s); });
 }
-function rtStop() {
-  if (rtCh && sb) { try { sb.removeChannel(rtCh); } catch (_) {} rtCh = null; }
-}
+function rtStop() { if (rtCh && sb) { try { sb.removeChannel(rtCh); } catch(_) {} rtCh = null; } }
 
 /* GPS */
 function gpsStart(cb) {
@@ -513,7 +405,7 @@ function showHome() {
       '<h1 class="home-title">SALIM&nbsp;SOS</h1>' +
       '<p class="home-sub">EMERGENCY RESPONSE SYSTEM</p>' +
       '<div class="home-line"></div>' +
-      '<p class="home-desc">One tap &bull; GPS broadcast &bull; All ' + GUARDIANS.length + ' guardians alerted instantly</p>' +
+      '<p class="home-desc">One tap &bull; GPS broadcast &bull; All ' + GUARDIANS.length + ' guardians notified instantly &mdash; even when phone is locked</p>' +
       '<div class="role-grid">' +
         '<button class="rcard red" onclick="showSender()">' +
           '<div class="rc-icon">&#x1F198;</div>' +
@@ -527,12 +419,12 @@ function showHome() {
           '<div class="rc-icon">&#x1F6E1;</div>' +
           '<div class="rc-role">GUARDIAN</div>' +
           '<div class="rc-name">MONITOR</div>' +
-          '<div class="rc-desc">Receive instant alerts &amp; track live location.</div>' +
+          '<div class="rc-desc">Enable push notifications to receive alarms when phone is locked.</div>' +
           '<div class="rc-phone">Stay alert. Stay ready.</div>' +
           '<div class="rc-go">&rarr; ENTER</div>' +
         '</button>' +
       '</div>' +
-      '<div class="sys-row"><span class="dot dot-green"></span>SYSTEM ONLINE &bull; REALTIME ACTIVE</div>' +
+      '<div class="sys-row"><span class="dot dot-green"></span>SYSTEM ONLINE &bull; PUSH + REALTIME ACTIVE</div>' +
     '</div>';
 }
 
@@ -545,85 +437,79 @@ function showSender() {
     var isE = eData && eData.status === 'EMERGENCY';
     if (isE) document.body.classList.add('emergency-active');
     else document.body.classList.remove('emergency-active');
-
     A.innerHTML =
       (isE ? '<div class="scanline"></div>' : '') +
       '<div class="grid"></div>' +
       '<div class="sender">' +
         '<button class="back-btn" onclick="showHome()">&larr;&nbsp;BACK</button>' +
-        '<div class="sender-badge">' +
-          pimg('sender-badge-photo') +
-          '<div>' +
-            '<div class="sender-badge-name">' + PATIENT.name + '</div>' +
-            '<div class="sender-badge-phone">' + PATIENT.phone + '</div>' +
-            '<div class="sender-badge-status">&#x26AB; PATIENT</div>' +
-          '</div>' +
+        '<div class="sender-badge">' + pimg('sender-badge-photo') +
+          '<div><div class="sender-badge-name">' + PATIENT.name + '</div>' +
+          '<div class="sender-badge-phone">' + PATIENT.phone + '</div>' +
+          '<div class="sender-badge-status">&#x26AB; PATIENT</div></div>' +
         '</div>' +
         '<div class="gps-row"><span class="dot dot-yellow" id="gps-dot"></span><span id="gps-txt">ACQUIRING GPS&hellip;</span></div>' +
         (isE ?
           '<div class="live-box">' +
             '<div class="live-title">&#x26A0;&nbsp;EMERGENCY ACTIVE</div>' +
             '<div class="live-timer" id="s-tmr">' + hms(elapsed) + '</div>' +
-            '<div class="live-line">&#x1F4E1;&nbsp;Broadcasting to ' + GUARDIANS.length + ' guardians</div>' +
-            '<div class="live-line" id="s-coord">&#x1F4CD;&nbsp;' + (eData.latitude ? safeN(eData.latitude, 6) + ', ' + safeN(eData.longitude, 6) : 'Locating&hellip;') + '</div>' +
+            '<div class="live-line">&#x1F4E1;&nbsp;Push sent to ' + GUARDIANS.length + ' guardians</div>' +
+            '<div class="live-line" id="s-coord">&#x1F4CD;&nbsp;' + (eData.latitude ? safeN(eData.latitude,6)+', '+safeN(eData.longitude,6) : 'Locating&hellip;') + '</div>' +
           '</div>' +
           '<div class="info-card">' +
-            '<div class="info-row"><span class="info-lbl">LATITUDE</span><span class="info-val" id="v-lat">' + safeN(eData.latitude, 7) + '</span></div>' +
-            '<div class="info-row"><span class="info-lbl">LONGITUDE</span><span class="info-val" id="v-lng">' + safeN(eData.longitude, 7) + '</span></div>' +
+            '<div class="info-row"><span class="info-lbl">LATITUDE</span><span class="info-val" id="v-lat">' + safeN(eData.latitude,7) + '</span></div>' +
+            '<div class="info-row"><span class="info-lbl">LONGITUDE</span><span class="info-val" id="v-lng">' + safeN(eData.longitude,7) + '</span></div>' +
           '</div>' +
           '<button class="resolve-btn" onclick="doResolve()">&#x2714;&nbsp;MARK AS SAFE / RESOLVED</button>'
           :
           '<div class="sos-wrap">' +
             '<button class="sos-btn" id="sos-btn" onclick="doActivate(this)">' +
               '<span class="ring"></span><span class="ring ring2"></span><span class="ring ring3"></span>' +
-              '<div class="btn-core">' +
-                pimg('btn-photo') +
+              '<div class="btn-core">' + pimg('btn-photo') +
                 '<span class="btn-lbl" id="btn-lbl">ACTIVATE</span>' +
                 '<span class="btn-sub">EMERGENCY SOS</span>' +
               '</div>' +
             '</button>' +
           '</div>' +
-          '<p class="sender-note">Press only in a real emergency.<br>All ' + GUARDIANS.length + ' guardians alerted instantly.</p>'
+          '<p class="sender-note">Press only in a real emergency.<br>Push notification sent to all ' + GUARDIANS.length + ' guardian phones instantly.</p>'
         ) +
       '</div>';
-
     gpsStart(function(c) {
       myPos = c;
       var dot = eid('gps-dot'), txt = eid('gps-txt');
       if (dot) dot.className = 'dot dot-green';
-      if (txt) txt.textContent = c.lat.toFixed(6) + ', ' + c.lng.toFixed(6) + '  \xB1' + Math.round(c.acc) + 'm';
+      if (txt) txt.textContent = c.lat.toFixed(6)+', '+c.lng.toFixed(6)+'  \xB1'+Math.round(c.acc)+'m';
       if (eid('v-lat')) {
         eid('v-lat').textContent = c.lat.toFixed(7);
         eid('v-lng').textContent = c.lng.toFixed(7);
-        var sc = eid('s-coord');
-        if (sc) sc.textContent = '\uD83D\uDCCD\u00A0' + c.lat.toFixed(6) + ', ' + c.lng.toFixed(6);
+        var sc = eid('s-coord'); if (sc) sc.textContent = '\uD83D\uDCCD\u00A0'+c.lat.toFixed(6)+', '+c.lng.toFixed(6);
       }
     });
     if (isE) {
       if (!sirenOn) sirenStart();
       clearInterval(tick);
-      tick = setInterval(function() { elapsed++; var t = eid('s-tmr'); if (t) t.textContent = hms(elapsed); }, 1000);
+      tick = setInterval(function() { elapsed++; var t=eid('s-tmr'); if(t) t.textContent=hms(elapsed); }, 1000);
     }
   }
-
   window.doActivate = function(btn) {
     btn.disabled = true;
     var lbl = eid('btn-lbl'); if (lbl) lbl.textContent = 'SENDING\u2026';
-    dbActivate(myPos ? myPos.lat : 0, myPos ? myPos.lng : 0).then(function(r) {
-      if (r.error) { alert('Failed:\n' + r.error.message); btn.disabled = false; if (lbl) lbl.textContent = 'ACTIVATE'; }
+    var lat = myPos ? myPos.lat : 0, lng = myPos ? myPos.lng : 0;
+    dbActivate(lat, lng).then(function(r) {
+      if (r.error) { alert('Failed:\n' + r.error.message); btn.disabled=false; if(lbl) lbl.textContent='ACTIVATE'; return; }
+      /* Send push to all guardian phones — works even when locked */
+      sendPushToAll({ latitude: lat, longitude: lng, timestamp: Date.now() });
     });
   };
   window.doResolve = function() {
     if (!confirm('Mark as RESOLVED?\nAll guardian alarms will stop.')) return;
-    dbResolve().then(function(r) { if (r.error) alert('Failed:\n' + r.error.message); });
+    dbResolve().then(function(r) { if(r.error) alert('Failed:\n'+r.error.message); });
   };
-
-  dbGet(function(row) { if (row) eData = row; draw(); });
+  dbGet(function(row) { if(row) eData=row; draw(); });
   rtStart(function(n) {
-    var wasE = eData && eData.status === 'EMERGENCY';
+    var wasE = eData && eData.status==='EMERGENCY';
     eData = n;
-    if (!wasE && n.status === 'EMERGENCY') elapsed = 0;
-    if (wasE && n.status !== 'EMERGENCY') { sirenStop(); clearInterval(tick); elapsed = 0; }
+    if (!wasE && n.status==='EMERGENCY') elapsed=0;
+    if (wasE && n.status!=='EMERGENCY') { sirenStop(); clearInterval(tick); elapsed=0; }
     draw();
   });
 }
@@ -633,6 +519,8 @@ function showSender() {
    ============================================================ */
 function showGuardian() {
   wipeAll();
+  var notifStatus = getNotifStatus();
+
   function draw() {
     var isE = eData && eData.status === 'EMERGENCY';
     if (isE) {
@@ -641,10 +529,20 @@ function showGuardian() {
       if (!muted) sirenStart();
     } else {
       document.body.classList.remove('emergency-active');
-      sirenStop(); vibStop();
-      clearInterval(tick); elapsed = 0; alertAt = null;
+      sirenStop(); vibStop(); clearInterval(tick); elapsed=0; alertAt=null;
     }
-    lMap = null; mrkS = null; mrkM = null; mrkL = null;
+    lMap=null; mrkS=null; mrkM=null; mrkL=null;
+    notifStatus = getNotifStatus();
+
+    /* Notification status block */
+    var notifBlock = '';
+    if (notifStatus === 'granted') {
+      notifBlock = '<div class="notif-box notif-granted"><span class="notif-icon">&#x1F514;</span><span>Push notifications ENABLED &mdash; You will receive alarms even when phone is locked!</span></div>';
+    } else if (notifStatus === 'denied') {
+      notifBlock = '<div class="notif-box notif-denied"><span class="notif-icon">&#x1F515;</span><span>Notifications BLOCKED. Go to Chrome Settings &rarr; Site Settings &rarr; Allow Notifications for this site.</span></div>';
+    } else {
+      notifBlock = '<button class="enable-notif-btn" onclick="enablePush()">&#x1F514;&nbsp;ENABLE PUSH NOTIFICATIONS<br><span style="font-family:var(--fm);font-size:.55rem;letter-spacing:.08em;opacity:.7">Required to receive alarm when phone is locked</span></button>';
+    }
 
     A.innerHTML =
       (isE ? '<div class="scanline"></div>' : '') +
@@ -653,139 +551,96 @@ function showGuardian() {
         '<button class="back-btn" onclick="showHome()">&larr;&nbsp;BACK</button>' +
         (isE ?
           '<div class="emg-bar"><span class="emg-lbl">&#x26A0;&nbsp;EMERGENCY ALERT</span><span class="emg-clock" id="g-tmr">' + hms(elapsed) + '</span></div>' +
-          '<div class="alert-box">' +
-            pimg('alert-photo') +
+          '<div class="alert-box">' + pimg('alert-photo') +
             '<div class="alert-name">' + PATIENT.name.toUpperCase() + '</div>' +
             '<div class="alert-phone-txt">' + PATIENT.phone + '</div>' +
             '<div class="alert-urgent">URGENT ACTION REQUIRED</div>' +
           '</div>' +
           '<div class="info-card">' +
-            '<div class="info-row"><span class="info-lbl">LATITUDE</span><span class="info-val">' + safeN(eData.latitude, 7) + '</span></div>' +
-            '<div class="info-row"><span class="info-lbl">LONGITUDE</span><span class="info-val">' + safeN(eData.longitude, 7) + '</span></div>' +
+            '<div class="info-row"><span class="info-lbl">LATITUDE</span><span class="info-val">' + safeN(eData.latitude,7) + '</span></div>' +
+            '<div class="info-row"><span class="info-lbl">LONGITUDE</span><span class="info-val">' + safeN(eData.longitude,7) + '</span></div>' +
           '</div>' +
           '<div id="map"></div>' +
           '<div class="dist-row" id="dist-row">&#x1F4CF;&nbsp;Calculating distance&hellip;</div>' +
           '<div class="act-grid">' +
-            '<button class="act ' + (muted ? 'act-unmute' : 'act-mute') + '" onclick="gMute()">' + (muted ? '&#x1F50A;&nbsp;UNMUTE SIREN' : '&#x1F507;&nbsp;MUTE / ACKNOWLEDGE') + '</button>' +
-            '<a class="act act-call" href="tel:' + PATIENT.phone.replace(/\s/g, '') + '">&#x1F4DE;&nbsp;CALL ' + PATIENT.name.toUpperCase() + '</a>' +
+            '<button class="act ' + (muted?'act-unmute':'act-mute') + '" onclick="gMute()">' + (muted?'&#x1F50A;&nbsp;UNMUTE SIREN':'&#x1F507;&nbsp;MUTE / ACKNOWLEDGE') + '</button>' +
+            '<a class="act act-call" href="tel:' + PATIENT.phone.replace(/\s/g,'') + '">&#x1F4DE;&nbsp;CALL ' + PATIENT.name.toUpperCase() + '</a>' +
           '</div>' +
           (muted ? '<div class="muted-tag">&#x1F507;&nbsp;SIREN MUTED LOCALLY &middot; EMERGENCY STILL ACTIVE</div>' : '') +
-          '<p class="ts-note">ALERT RECEIVED:&nbsp;' + (alertAt ? new Date(alertAt).toLocaleTimeString('en-IN', { hour12: true }) : '\u2014') + '</p>'
+          '<p class="ts-note">ALERT RECEIVED:&nbsp;' + (alertAt ? new Date(alertAt).toLocaleTimeString('en-IN',{hour12:true}) : '\u2014') + '</p>'
           :
           '<div class="g-icon">&#x1F6E1;</div>' +
           '<div class="g-title">GUARDIAN ACTIVE</div>' +
           '<div class="g-sub">Monitoring ' + PATIENT.name + ' &middot; ' + PATIENT.phone + '</div>' +
-          '<div class="pill"><span class="dot dot-green"></span>' + (eData && eData.status === 'SAFE' ? 'ALL CLEAR &mdash; SAFE' : 'MONITORING &middot; NO EMERGENCY') + '</div>' +
+          notifBlock +
+          '<div class="pill"><span class="dot dot-green"></span>' + (eData&&eData.status==='SAFE'?'ALL CLEAR &mdash; SAFE':'MONITORING &middot; NO EMERGENCY') + '</div>' +
           '<div class="g-list"><div class="g-list-title">GUARDIAN NETWORK (' + GUARDIANS.length + '/10)</div>' +
-            GUARDIANS.map(function(g) { return '<div class="g-item"><span class="g-dot"></span>' + g.name + '&nbsp;&middot;&nbsp;' + g.phone + '</div>'; }).join('') +
+            GUARDIANS.map(function(g) { return '<div class="g-item"><span class="g-dot"></span>'+g.name+'&nbsp;&middot;&nbsp;'+g.phone+'</div>'; }).join('') +
           '</div>' +
-          '<p class="g-note">Keep this page open.<br>The alarm fires automatically when Salim activates SOS.</p>' +
-          '<button onclick="testAlarm()" style="margin-top:8px;background:rgba(255,28,28,.1);border:1px solid rgba(255,28,28,.4);color:var(--r);font-family:var(--fm);font-size:.65rem;letter-spacing:.1em;padding:9px 20px;border-radius:6px;cursor:pointer;width:100%">&#x1F50A; TAP HERE FIRST — Unlock Sound &amp; Test Alarm</button>'
+          '<p class="g-note">After enabling notifications, you can lock your phone.<br>The alarm will still come through automatically.</p>'
         ) +
       '</div>';
 
     if (isE && eData.latitude) {
       var sLat = Number(eData.latitude), sLng = Number(eData.longitude);
-      gpsStart(function(c) { myPos = c; mapRefresh(sLat, sLng, c.lat, c.lng); });
-      setTimeout(function() {
-        try { mapInit(sLat, sLng); mapRefresh(sLat, sLng, myPos ? myPos.lat : null, myPos ? myPos.lng : null); } catch (e) {}
-      }, 200);
+      gpsStart(function(c) { myPos=c; mapRefresh(sLat,sLng,c.lat,c.lng); });
+      setTimeout(function() { try { mapInit(sLat,sLng); mapRefresh(sLat,sLng,myPos?myPos.lat:null,myPos?myPos.lng:null); } catch(e) {} }, 200);
       clearInterval(tick);
-      tick = setInterval(function() { elapsed++; var t = eid('g-tmr'); if (t) t.textContent = hms(elapsed); }, 1000);
+      tick = setInterval(function() { elapsed++; var t=eid('g-tmr'); if(t) t.textContent=hms(elapsed); }, 1000);
     }
   }
 
+  window.enablePush = function() {
+    subscribeGuardian(function(ok, err) {
+      if (ok) { notifStatus='granted'; draw(); alert('\u2705 Push notifications enabled!\nYou will now receive alarms even when your phone is locked.'); }
+      else alert('Could not enable notifications:\n' + err + '\n\nTry: Chrome Settings \u2192 Site Settings \u2192 Allow Notifications');
+    });
+  };
   window.gMute = function() {
     muted = !muted;
     if (muted) { sirenStop(); vibStop(); } else { sirenStart(); vibStart(); }
     draw();
   };
 
-  dbGet(function(row) { if (row) eData = row; draw(); });
+  dbGet(function(row) { if(row) eData=row; draw(); });
   rtStart(function(n) {
-    var wasE = eData && eData.status === 'EMERGENCY';
-    var nowE = n.status === 'EMERGENCY';
+    var wasE = eData && eData.status==='EMERGENCY';
+    var nowE = n.status==='EMERGENCY';
     eData = n;
-    if (!wasE && nowE) {
-      elapsed = 0; alertAt = Date.now(); muted = false;
-      vibStart();
-      console.log('[RT] ALARM TRIGGERED!');
-    }
-    if (wasE && !nowE) { sirenStop(); vibStop(); clearInterval(tick); elapsed = 0; alertAt = null; }
+    if (!wasE && nowE) { elapsed=0; alertAt=Date.now(); muted=false; vibStart(); console.log('[RT] ALARM!'); }
+    if (wasE && !nowE) { sirenStop(); vibStop(); clearInterval(tick); elapsed=0; alertAt=null; }
     draw();
   });
 }
 
-/* TEST ALARM — guardian taps this to unlock audio AND verify alarm works */
-function testAlarm() {
-  unlockAudio();
-  /* Short test beep to confirm audio works */
-  try {
-    var t = new (window.AudioContext || window.webkitAudioContext)();
-    t.resume().then(function() {
-      var o = t.createOscillator();
-      var g = t.createGain();
-      g.gain.value = 0.6;
-      o.connect(g); g.connect(t.destination);
-      o.frequency.value = 880;
-      o.start();
-      setTimeout(function() { o.stop(); t.close(); }, 600);
-    });
-    vibrateNow();
-    alert('Sound & vibration test done!\nIf you heard a beep, you are READY.\nLeave this page open — alarm will fire automatically when Salim activates SOS.');
-  } catch(e) {
-    alert('Audio test failed: ' + e.message + '\nTry using Chrome browser.');
-  }
-}
-
 /* ERROR */
 function showErr(msg) {
-  A.innerHTML = '<div class="err-screen"><div style="font-size:3.5rem">&#x26A0;</div><div style="color:var(--r);font-size:1.1rem;letter-spacing:.12em;font-family:var(--fm)">FAILED TO LOAD</div><div style="color:var(--w3);font-size:.78rem;max-width:320px;line-height:1.8">' + msg + '</div><button class="err-btn" onclick="location.reload()">&#x21BA;&nbsp;RELOAD</button></div>';
+  A.innerHTML = '<div class="err-screen"><div style="font-size:3.5rem">&#x26A0;</div><div style="color:var(--r);font-size:1.1rem;letter-spacing:.12em">FAILED TO LOAD</div><div style="color:var(--w3);font-size:.78rem;max-width:320px;line-height:1.8">'+msg+'</div><button class="err-btn" onclick="location.reload()">&#x21BA;&nbsp;RELOAD</button></div>';
 }
-
-/* PRE-UNLOCK AUDIO on first touch — fixes browser autoplay block */
-var audioUnlocked = false;
-function unlockAudio() {
-  if (audioUnlocked) return;
-  try {
-    var tmpCtx = new (window.AudioContext || window.webkitAudioContext)();
-    var buf = tmpCtx.createBuffer(1, 1, 22050);
-    var src = tmpCtx.createBufferSource();
-    src.buffer = buf;
-    src.connect(tmpCtx.destination);
-    src.start(0);
-    tmpCtx.resume().then(function() {
-      tmpCtx.close();
-      audioUnlocked = true;
-      console.log('[Audio] Unlocked successfully');
-    });
-  } catch(e) { console.warn('[Audio unlock]', e); }
-}
-/* Unlock on any touch or click */
-document.addEventListener('touchstart', unlockAudio, { once: true });
-document.addEventListener('click', unlockAudio, { once: true });
 
 /* BOOT */
 var tries = 0;
 function boot() {
   tries++;
-  if (tries > 35) { showErr('Supabase CDN unreachable.<br>Check internet &amp; reload.'); return; }
+  if (tries > 35) { showErr('Supabase CDN unreachable. Check internet & reload.'); return; }
   if (!window.supabase) { setTimeout(boot, 280); return; }
   try {
     sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
-    if ('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js').catch(function() {});
+    /* Register Service Worker for push */
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/sw.js').then(function(reg) {
+        swReg = reg;
+        console.log('[SW] Registered, scope:', reg.scope);
+      }).catch(function(e) { console.warn('[SW]', e); });
+    }
     var role = new URLSearchParams(window.location.search).get('role');
     if (role === 'sender') showSender();
     else if (role === 'guardian') showGuardian();
     else showHome();
-  } catch (e) { showErr('Boot error: ' + e.message); }
+  } catch(e) { showErr('Boot error: ' + e.message); }
 }
-setTimeout(function() {
-  if (A.innerHTML.includes('LOADING SALIM SOS'))
-    showErr('Taking too long.<br>Check internet or open console (F12).');
-}, 11000);
+setTimeout(function() { if (A.innerHTML.includes('LOADING')) showErr('Taking too long. Check internet or F12 console.'); }, 11000);
 boot();
-
 </script>
 </body>
 </html>
